@@ -57,7 +57,23 @@ class StackLL{
         return x;
      }
 
-
+    void reverse(){
+        Node*p,*q= NULL;
+        p=Top;
+        int l=count();
+        for(int i=0; i<l; i++){
+            if(i==0){
+            p=p->next;
+            Top->next=NULL;
+            }
+            else{
+        q= p->next;
+        p->next=Top;
+        Top=p;
+        p=q;  
+            }   
+        }
+    }
 
      bool isEmpty(){
         if(!Top) return true;
@@ -123,6 +139,7 @@ s.display();
 cout<<"Length of stack: "<<s.count()<<endl;
 cout<<"Top value from stack: "<<s.stackTop()<<endl;
 cout<<"peeked value from stack at position 3: "<<s.peek(3)<<endl;
-
+s.reverse();
+s.display();
     return 0;
 }

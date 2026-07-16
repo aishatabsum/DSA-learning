@@ -1,5 +1,8 @@
 #include <iostream>
+#include<cstring>
+
 using namespace std;
+
 class stack{
    private:
 
@@ -31,6 +34,57 @@ A[++Top]=x;
         delete[] A;
     }
 
+
+bool isOperand(char x){
+    if(x=='+'||x=='-'||x=='*'||x=='/'){
+        return false;
+    }else
+    return true;
+ }
+
+ int preced(char x){
+    if(x=='+'||x=='-') return 1;
+    else if(x=='*'||x=='/') return 2;
+    else return 0;
+ }
+
+ char*  convert(const char*infix){
+  char *postfix=new char[strlen(infix)+1];
+  int i=0, j=0;
+   while(infix[i]!='\0'){
+  if(isOperand(infix[i]))
+  postfix[j++]=infix[i++];
+  else{
+    if(preced(infix[i])>preced(stackTop())){
+        push(infix[i++]);
+    }else{
+        postfix[j++]=pop();
+    }
+}
+  }
+  while(!isEmpty()){
+    postfix[j++]=pop();
+ }
+ postfix[j]='\0';
+ return postfix;
+}
+
+int evaluate(char* postfix){
+int x1,x2,i,r;
+    for(int i=0; postfix[i]!='\0'; i++){
+    if(isOperand(postfix[i]))  push(postfix[i]-'0');
+    else{
+  x2=pop();
+  x1=pop();
+  switch(postfix[i]){
+    case '+': r=x1+x2; push(r); break;
+    case '-':  r=x1-x2; push(r); break;
+    case '*':  r=x1*x2; push(r); break;
+    case '/':  r=x1/x2; push(r); break;
+  }
+    }
+}return pop();
+}
 int pop(){
 if(isEmpty()){
     cout<<"Stack underflow!\n";
@@ -96,27 +150,14 @@ bool isFull(){
     else return false;
 }
 };
-
-
 int main(){
-
-    stack s(10);
-    s.display();
-    s.push(12);
-    s.push(177);
-    s.push(73);
-    s.push(100);
-cout<<"Length of stack: "<<s.length()<<endl;
+const char *infix="3*5+6/2-4";
+ stack st(strlen(infix)+1);
+ char* InfixToPostfix = st.convert(infix);
+   cout<<"Infix to postfix converted: "<<InfixToPostfix<<endl;
+int result=st.evaluate(InfixToPostfix);
+cout<<"Result of postfix evaluation: "<<result<<endl;
 
 
-    s.display();
-    cout<<"Popped element: "<<s.pop()<<"\n";
-    s.display();
-cout<<"Length of stack: "<<s.length()<<endl;
-
-cout<<"Value at top of stack: "<<s.stackTop()<<endl;
-cout<<"Peeked value at position 2(top-bottom): "<<s.peek(2)<<endl;
-s.reverse();
-s.display();
-return 0;
+    return 0;
 }
